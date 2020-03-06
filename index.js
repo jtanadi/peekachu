@@ -58,6 +58,7 @@ const getTrees = async () => {
   // })
 }
 
+// Should be POST request when deployed
 app.get("/api/postreceive", async (req, res) => {
   getTrees()
   res.sendStatus(204)
