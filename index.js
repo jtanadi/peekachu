@@ -18,9 +18,8 @@ let REPOS = {};
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  const text = `POST /api/postreceive
-  GET /api/getrepos/:repoName
-  `;
+  const text = `POST /api/postreceive\nGET /api/getrepos/:repoName`;
+  res.set("Content-Type", "text/plain");
   res.send(text);
 });
 
