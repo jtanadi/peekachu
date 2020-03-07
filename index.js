@@ -17,6 +17,13 @@ let REPOS = {};
 
 app.use(bodyParser.json());
 
+app.get("/", (req, res) => {
+  const text = `POST /api/postreceive
+  GET /api/getrepos/:repoName
+  `;
+  res.send(text);
+});
+
 // This endpoint is called every time we push
 // to the Github repo, so we evict and rebuild cache
 app.post("/api/postreceive", async (req, res) => {
@@ -25,7 +32,7 @@ app.post("/api/postreceive", async (req, res) => {
   res.sendStatus(204);
 });
 
-app.get("/api/getdirs/:repoName", async (req, res) => {
+app.get("/api/getrepos/:repoName", async (req, res) => {
   const { repoName } = req.params;
 
   // Use cached directories if available
@@ -36,4 +43,3 @@ app.get("/api/getdirs/:repoName", async (req, res) => {
 });
 
 app.listen(port, console.log(`Listening on port ${port}`));
-
