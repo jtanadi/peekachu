@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const getDirs = require("./utils/getDirs");
@@ -15,6 +16,7 @@ const port = process.env.PORT || 3000;
 // }
 let REPOS = {};
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
