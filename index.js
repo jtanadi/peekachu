@@ -1,26 +1,39 @@
 const express = require("express");
+const bodyParser = require("body-parser");
+
 const getDirs = require("./utils/getDirs");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Simple cache
-// { dir1: [file1.ext, file2.ext, file3.ext], dir2: ...}
-let DIRS = {};
+// {
+//   repo1: {
+//     dir1: [file1.ext, file2.ext, file3.ext],
+//     dir2: ...
+//   }
+// }
+let REPOS = {};
+
+app.use(bodyParser.json());
 
 // This endpoint is called every time we push
 // to the Github repo, so we evict and rebuild cache
 app.post("/api/postreceive", async (req, res) => {
-  DIRS = await getDirs();
+  const { name } = req.body.repository;
+  REPOS[name] = await getDirs(name);
   res.sendStatus(204);
 });
 
-app.get("/api/getdirs", async (req, res) => {
+app.get("/api/getdirs/:repoName", async (req, res) => {
+  const { repoName } = req.params;
+
   // Use cached directories if available
-  if (!Object.keys(DIRS).length) {
-    DIRS = await getDirs();
+  if (!REPOS[repoName]) {
+    REPOS[repoName] = await getDirs(repoName);
   }
-  res.send(DIRS);
+  res.send(REPOS[repoName]);
 });
 
 app.listen(port, console.log(`Listening on port ${port}`));
+

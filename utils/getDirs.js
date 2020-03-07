@@ -1,5 +1,5 @@
 const https = require("https");
-const { owner, repo, api, authHeader } = require("./githubAPI");
+const { api, authHeader } = require("./githubAPI");
 
 const request = (address, options) => {
   return new Promise((resolve, reject) => {
@@ -22,13 +22,15 @@ const request = (address, options) => {
   });
 };
 
-module.exports = async () => {
+module.exports = async repo => {
   try {
-    const commits = await request(api + "/commits", { headers: authHeader });
+    const commits = await request(api + `/${repo}/commits`, {
+      headers: authHeader
+    });
     const commitSHA = commits[0].sha;
 
     const { tree } = await request(
-      api + `/git/trees/${commitSHA}?recursive=true`,
+      api + `/${repo}/git/trees/${commitSHA}?recursive=true`,
       {
         headers: authHeader
       }
