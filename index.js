@@ -1,74 +1,26 @@
-const axios = require("axios")
-const express = require("express")
+const express = require("express");
+const getDirs = require("./utils/getDirs");
 
-require('dotenv').config()
+const app = express();
+const port = process.env.PORT || 3000;
 
-const app = express()
+// Simple cache
+// { dir1: [file1.ext, file2.ext, file3.ext], dir2: ...}
+let DIRS = {};
 
-const owner = "raa-scripts"
-const repo = "indd"
-const githubAPI = `https://api.github.com/repos/${owner}/${repo}`
-const authHeader = { "Authorization": `token ${process.env.GITHUB_TOKEN}` }
-
-let TREES = []
-
-const getTrees = async () => {
-  const commitSHA = await axios.get(githubAPI + "/commits", { headers: authHeader})
-    .then(_res => _res.data)
-    .then(data => data[0])
-    .then(commit => commit.sha)
-    .catch(e => console.log(e.data))
-
-  const trees = await axios.get(githubAPI + `/git/trees/${commitSHA}`, { headers: authHeader})
-    .then(_res => _res.data)
-    .then(data => data.tree)
-    .catch(e => console.log(e.data))
-
-  for (let i = 0; i < trees.length; i++) {
-    const tree = trees[i]
-    const obj = {
-      dir: tree.path
-    }
-
-    console.log(tree)
-
-
-
-    // const paths = _trees.map(_tree => _tree.path)
-    // retObj["files"] = paths
-
-    // console.log(obj)
-    // TREES.push(obj)
-  }
-
-
-  // TREES = trees.map(async tree => {
-  //   const retObj = {
-  //     dir: tree.path
-  //   }
-  //   const f = await axios.get(githubAPI + `/git/trees/${tree.sha}`)
-  //     .then(_res => _res.data)
-  //     .then(data => data.tree)
-  //     .then(ts => {
-  //       const paths = ts.map(t => t.path)
-  //       retObj["files"] = paths
-  //     })
-  //     .catch(e => console.log(e))
-  //   return retObj
-  // })
-}
-
-// Should be POST request when deployed
-app.get("/api/postreceive", async (req, res) => {
-  getTrees()
-  res.sendStatus(204)
-})
+// This endpoint is called every time we push
+// to the Github repo, so we evict and rebuild cache
+app.post("/api/postreceive", async (req, res) => {
+  DIRS = await getDirs();
+  res.sendStatus(204);
+});
 
 app.get("/api/getdirs", async (req, res) => {
-  if (!TREES.length) {
-    getTrees()
+  // Use cached directories if available
+  if (!Object.keys(DIRS).length) {
+    DIRS = await getDirs();
   }
-  res.send(TREES)
-})
+  res.send(DIRS);
+});
 
-app.listen(3000, console.log("listening on port 3000"))
+app.listen(port, console.log(`Listening on port ${port}`));
