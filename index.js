@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
-const getDirs = require("./utils/getDirs");
+const getRepoContents = require("./utils/getRepoContents");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 // to the Github repo, so we evict and rebuild cache
 app.post("/api/postreceive", async (req, res) => {
   const { name } = req.body.repository;
-  REPOS[name] = await getDirs(name);
+  REPOS[name] = await getRepoContents(name);
   res.sendStatus(204);
 });
 
@@ -36,7 +36,7 @@ app.get("/api/repo/:name", async (req, res) => {
 
   // Use cached directories if available
   if (!REPOS[name]) {
-    REPOS[name] = await getDirs(name);
+    REPOS[name] = await getRepoContents(name);
   }
   res.send(REPOS[name]);
 });
