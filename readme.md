@@ -7,6 +7,8 @@ Similar to a CDN, operator serves as a convenience layer and a cache of sorts. R
 ### `POST /api/postreceive`
 Endpoint for Github webhook. Accepts default payload from Github, but the only value consumed is `repository.name`.
 
+URL to use for webhooks: `https://raa-operator.herokuapp.com/api/postreceive`.
+
 ### `GET /api/repo/:name`
 Returns names of directories and files from a specified repo. `repoName` must be valid.
 
