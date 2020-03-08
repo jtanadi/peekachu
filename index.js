@@ -1,20 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const NodeCache = require("node-cache");
 
 const getRepoContents = require("./utils/getRepoContents");
 
 const app = express();
+const cache = new NodeCache();
 const port = process.env.PORT || 3000;
-
-// Simple cache
-// {
-//   repo1: {
-//     dir1: [file1.ext, file2.ext, file3.ext],
-//     dir2: ...
-//   }
-// }
-let REPOS = {};
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -23,11 +16,12 @@ app.get("/", (req, res) => {
   res.redirect(301, "https://github.com/raa-scripts/operator");
 });
 
-// This endpoint is called every time we push
-// to the Github repo, so we evict and rebuild cache
+// This endpoint is called only when we push to the GH repo,
+// so we should evict and rebuild cache for that repo
 app.post("/api/postreceive", async (req, res) => {
   const { name } = req.body.repository;
-  REPOS[name] = await getRepoContents(name);
+  const repoDirs = await getRepoContents(name);
+  cache.set(name, repoDirs);
   res.sendStatus(204);
 });
 
@@ -35,10 +29,12 @@ app.get("/api/repo/:name", async (req, res) => {
   const { name } = req.params;
 
   // Use cached directories if available
-  if (!REPOS[name]) {
-    REPOS[name] = await getRepoContents(name);
+  let repoDirs = cache.get(name);
+  if (!repoDirs) {
+    repoDirs = await getRepoContents(name);
   }
-  res.send(REPOS[name]);
+  res.send(repoDirs);
+  cache.set(name, repoDirs);
 });
 
 app.listen(port, console.log(`Listening on port ${port}`));
