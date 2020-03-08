@@ -13,36 +13,38 @@ URL to use for webhooks: `https://raa-operator.herokuapp.com/api/postreceive`.
 Returns names of directories and files from a specified repo. `repoName` must be valid.
 
 #### Payload
-Data is returned in `JSON` format, with directory names as keys and file names as values in an array.
+Data is returned in `JSON` format. Directories are returned as recursive / nested objects. Files are listed in an array in `directory["."]`.
 
 Sample:
 ```json
 {
-    "_lib": [
-        "checkExtension.js",
-        "getExtension.js",
-        "getNameFromPath.js",
-        "zFill.js",
-        "zip.js"
-    ],
-    "aiTest": [
-        "aiTest.js",
-        "collectLayerNames.js"
-    ],
-    "batchConvert": [
-        "batch_convert.jsxbin"
-    ],
-    "batchDoScript": [
-        "batchDoScript.jsx"
-    ],
-    "batchMergeLayers": [
-        "batchMergeLayers.js"
-    ],
-    "batchRelink": [
-        "batchRelink.js",
-        "batchRelink_TSHM.js",
-        "batchRelink_forMC.js"
-    ]
+    "_lib": {
+        ".": [
+            "checkExtension.js",
+            "getExtension.js",
+            "getNameFromPath.js",
+            "zFill.js",
+            "zip.js"
+        ]
+    },
+    "aiTest": {
+        ".": [
+            "aiTest.js",
+            "collectLayerNames.js"
+        ]
+    },
+    "slugger": {
+        ".": [
+            "slugSetup2.jsx",
+            "slugUpdate.jsx"
+        ],
+        "z-old": {
+            ".": [
+                "slugSetup.jsx",
+                "slugSetup_PIMA.jsx"
+            ]
+        }
+    }
 }
 ```
 
