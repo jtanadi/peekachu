@@ -20,9 +20,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  const text = `POST /api/postreceive\nGET /api/getrepos/:repoName`;
-  res.set("Content-Type", "text/plain");
-  res.send(text);
+  res.redirect(301, "https://github.com/raa-scripts/operator");
 });
 
 // This endpoint is called every time we push
