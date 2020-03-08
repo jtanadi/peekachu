@@ -33,14 +33,14 @@ app.post("/api/postreceive", async (req, res) => {
   res.sendStatus(204);
 });
 
-app.get("/api/getrepos/:repoName", async (req, res) => {
-  const { repoName } = req.params;
+app.get("/api/repo/:name", async (req, res) => {
+  const { name } = req.params;
 
   // Use cached directories if available
-  if (!REPOS[repoName]) {
-    REPOS[repoName] = await getDirs(repoName);
+  if (!REPOS[name]) {
+    REPOS[name] = await getDirs(name);
   }
-  res.send(REPOS[repoName]);
+  res.send(REPOS[name]);
 });
 
 app.listen(port, console.log(`Listening on port ${port}`));
