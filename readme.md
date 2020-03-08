@@ -1,7 +1,7 @@
 # operator
-operator is a REST microservice that gathers all visible directories and files of a repo and returns their names. The microservice works with the Github webhook to fetch the latest commit of a repo.
+`operator` is a small REST service that gathers all visible directories and files of a repo and returns their names. The server works with the Github webhook to fetch the latest commit of a repo.
 
-Similar to a CDN, operator serves as a convenience layer and a cache of sorts. Rather than having to ping the Github API directly every time we need a list of directories and file, operator does the fetching and storing of data.
+Similar to a CDN, `operator` serves as a convenience layer and a cache of sorts. Rather than having to ping the Github API directly every time we need a list of directories and file, operator does the fetching and storing of data.
 
 ## API Endpoints
 ### `POST /api/postreceive`
