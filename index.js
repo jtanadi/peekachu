@@ -13,7 +13,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  res.redirect(301, "https://github.com/raa-scripts/operator");
+  res.redirect(301, "https://github.com/raa-tools/operator");
 });
 
 // This endpoint is called only when we push to the GH repo,
