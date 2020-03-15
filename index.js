@@ -2,6 +2,7 @@ const restana = require("restana");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const NodeCache = require("node-cache");
+const timeout = require("connect-timeout");
 
 const getRepoContents = require("./utils/getRepoContents");
 
@@ -29,7 +30,7 @@ app.post("/api/postreceive", async (req, res) => {
   }
 });
 
-app.get("/api/repo/:name", async (req, res) => {
+app.get("/api/repo/:name", timeout("5s"), async (req, res) => {
   const { name } = req.params;
 
   // Use cached directories if available
@@ -37,12 +38,12 @@ app.get("/api/repo/:name", async (req, res) => {
   if (!repoDirs) {
     try {
       repoDirs = await getRepoContents(name);
-      res.send(repoDirs);
       cache.set(name, repoDirs);
     } catch (e) {
       res.send(e);
     }
   }
+  res.send(repoDirs);
 });
 
 app.start(port).then(() => console.log(`Listening on port ${port}`));
