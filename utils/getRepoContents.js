@@ -8,8 +8,8 @@ module.exports = async repo => {
     headers: authHeader
   });
 
-  if (!commits[0]) {
-    throw makeError(404, `No commits found in repo '${repo}'.`);
+  if (!commits || !commits.length) {
+    throw makeError(404, `Repo ${repo} not found or no commits found.`);
   }
 
   const commitSHA = commits[0].sha;
