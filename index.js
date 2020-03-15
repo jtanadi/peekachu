@@ -19,10 +19,14 @@ app.get("/", (req, res) => {
 // This endpoint is called only when we push to the GH repo,
 // so we should evict and rebuild cache for that repo
 app.post("/api/postreceive", async (req, res) => {
-  const { name } = req.body.repository;
-  const repoDirs = await getRepoContents(name);
-  cache.set(name, repoDirs);
-  res.send(204);
+  try {
+    const { name } = req.body.repository;
+    const repoDirs = await getRepoContents(name);
+    cache.set(name, repoDirs);
+    res.send(204);
+  } catch (e) {
+    res.send(e);
+  }
 });
 
 app.get("/api/repo/:name", async (req, res) => {
@@ -33,14 +37,12 @@ app.get("/api/repo/:name", async (req, res) => {
   if (!repoDirs) {
     try {
       repoDirs = await getRepoContents(name);
+      res.send(repoDirs);
+      cache.set(name, repoDirs);
     } catch (e) {
       res.send(e);
     }
   }
-
-  res.send(repoDirs);
-  cache.set(name, repoDirs);
 });
 
 app.start(port).then(() => console.log(`Listening on port ${port}`));
-
