@@ -18,6 +18,9 @@
     "url": "https://github.com/raa-scripts/operator/issues"
   },
   "homepage": "https://github.com/raa-scripts/operator#readme",
+  "engines": {
+    "node": ">=12.6.0"
+  },
   "devDependencies": {
     "nodemon": "^2.0.2"
   },
