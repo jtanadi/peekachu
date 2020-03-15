@@ -1,4 +1,4 @@
-const { api, authHeader } = require("./githubAPI");
+const { api, authHeader } = require("../config");
 const buildTree = require("./buildTree");
 const makeError = require("./makeError");
 const request = require("./request");
