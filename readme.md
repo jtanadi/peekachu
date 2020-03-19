@@ -1,4 +1,7 @@
-# 👀️ peekachu 👀️
+<div align="center">
+    <img src="./docs/peeker-01.png" alt="peeker illustration" height="300">
+    <h1>👀️ peekachu 👀️</h1>
+</div>
 `peekachu` is a RESTful microservice that gathers all visible directories and files of a repo and returns their names. The server works with the Github webhook to fetch the latest commit of a repo.
 
 Similar to a CDN, `peekachu` serves as a convenience layer and a cache of sorts. Rather than having to ping the Github API directly every time we need a list of directories and file, `peekachu` does the fetching and storing of data.
