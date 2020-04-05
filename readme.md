@@ -8,6 +8,9 @@
 Similar to a CDN, `peekachu` serves as a convenience layer and a cache of sorts. Rather than having to ping the GitHub API directly every time we need a list of directories and file, `peekachu` does the fetching and storing of data.
 
 ## API Endpoints
+###`GET /api/ping`
+Pings the server to wake it up. Returns a `204` status code.
+
 ### `POST /api/postreceive`
 Endpoint for GitHub webhook. Accepts default payload from GitHub, but the only value consumed is `repository.name`.
 

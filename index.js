@@ -17,6 +17,10 @@ app.get("/", (req, res) => {
   res.send("", 301, { Location: "https://github.com/raa-tools/operator" });
 });
 
+app.get("/api/ping", (req, res) => {
+  res.send(204);
+});
+
 // This endpoint is called only when we push to the GH repo,
 // so we should evict and rebuild cache for that repo
 app.post("/api/postreceive", async (req, res) => {
