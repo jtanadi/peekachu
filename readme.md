@@ -1,3 +1,6 @@
+# ARCHIVED AS OF AUGUST 30 2022
+Heroku is deprecating their free tier, so there is no host for this service.
+
 <div align="center">
     <img src="./docs/peeker-01.png" alt="peeker illustration" height="300">
     <h1>👀️ peekachu 👀️</h1>
